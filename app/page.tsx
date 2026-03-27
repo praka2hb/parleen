@@ -369,6 +369,8 @@ export default function Home() {
           </div>
         </section>
 
+        <HorizontalScrollSection />
+
         <div className="about-pin-zone">
           <section id="about" ref={aboutRef}>
             <motion.div
@@ -383,18 +385,17 @@ export default function Home() {
                   / About Parleen
                 </motion.p>
                 <motion.h2 className="a-heading" variants={aboutVariants.heading}>
-                  Faces tell stories.
+                  {/* Faces tell stories.
                   <br />
-                  Hers tells many.
+                  Hers tells many. */}
+                  Soon
                 </motion.h2>
                 <motion.div className="a-rule" variants={aboutVariants.rule} />
                 <motion.p className="a-body" variants={aboutVariants.body}>
-                  Parleen Kaur is a multidisciplinary creative - an actor with depth, a model with
-                  presence, and a content creator with an eye for the real and the beautiful. Based
-                  in India, working everywhere.
+                  soon
                 </motion.p>
                 <motion.div className="a-stats" variants={aboutVariants.statsRow}>
-                  <motion.div className="stat" variants={aboutVariants.stat}>
+                  {/* <motion.div className="stat" variants={aboutVariants.stat}>
                     <span className="stat-n">{counters.s1}+</span>
                     <span className="stat-l">Years</span>
                   </motion.div>
@@ -405,7 +406,7 @@ export default function Home() {
                   <motion.div className="stat" variants={aboutVariants.stat}>
                     <span className="stat-n">{counters.s3}K</span>
                     <span className="stat-l">Followers</span>
-                  </motion.div>
+                  </motion.div> */}
                 </motion.div>
                 {/* <motion.div className="a-tags" variants={aboutVariants.tagsRow}>
                   {["Acting", "Modeling", "Dance", "Lifestyle", "Brand Collab", "Fashion"].map((t) => (
@@ -423,8 +424,6 @@ export default function Home() {
             </motion.div>
           </section>
         </div>
-
-        <HorizontalScrollSection />
       </div>
     </main>
   );
