@@ -2,6 +2,8 @@
 
 import { animate, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useMemo, useRef, useState } from "react";
+import HorizontalScrollSection from "./components/ParallaxGallery";
+import "./gallery.css";
 
 const roles = ["Actor.", "Creator.", "Model."];
 
@@ -363,15 +365,7 @@ export default function Home() {
                 A multidisciplinary artist bringing characters to life - on screen, on camera, and
                 in every frame.
               </p>
-              <button className="h-btn" onClick={scrollToAbout}>
-                Explore her world
-              </button>
             </div>
-          </div>
-
-          <div id="sh">
-            <span>Scroll</span>
-            <div className="vline" />
           </div>
         </section>
 
@@ -413,13 +407,13 @@ export default function Home() {
                     <span className="stat-l">Followers</span>
                   </motion.div>
                 </motion.div>
-                <motion.div className="a-tags" variants={aboutVariants.tagsRow}>
+                {/* <motion.div className="a-tags" variants={aboutVariants.tagsRow}>
                   {["Acting", "Modeling", "Dance", "Lifestyle", "Brand Collab", "Fashion"].map((t) => (
                     <motion.span key={t} className="tag" variants={aboutVariants.tag}>
                       {t}
                     </motion.span>
                   ))}
-                </motion.div>
+                </motion.div> */}
               </motion.div>
 
               <motion.div className="a-photo-wrap" variants={aboutVariants.photo}>
@@ -430,12 +424,7 @@ export default function Home() {
           </section>
         </div>
 
-        <section id="ns">
-          <div>
-            <p className="ns-label">Continue scrolling</p>
-            <p className="ns-text">Gallery · Reels · Contact</p>
-          </div>
-        </section>
+        <HorizontalScrollSection />
       </div>
     </main>
   );

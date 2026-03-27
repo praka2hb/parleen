@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond, IM_Fell_English, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import LenisProvider from "./components/LenisProvider";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
@@ -23,7 +24,7 @@ const cormorantGaramond = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   title: "Parleen Kaur",
-  description: "Parleen Kaur - Hero and About experience",
+  description: "Parleen Kaur — Actor · Creator · Model",
 };
 
 export default function RootLayout({
@@ -36,8 +37,9 @@ export default function RootLayout({
       <body
         className={`${spaceGrotesk.variable} ${imFellEnglish.variable} ${cormorantGaramond.variable} antialiased`}
       >
-        {children}
+        <LenisProvider>{children}</LenisProvider>
       </body>
     </html>
   );
 }
+

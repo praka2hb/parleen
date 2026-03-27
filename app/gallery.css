@@ -1,0 +1,422 @@
+/* ═══════════════════════════════════════════════════════
+   HORIZONTAL SCROLL GALLERY — Cinematic Portfolio
+   Theme: --dark (#0d0d0d), --accent (#e8c49a), --text (#fafaf8)
+   ═══════════════════════════════════════════════════════ */
+
+/* ─── Scroll wrapper (tall, gives vertical scroll "fuel") ─── */
+.hg-scroll-wrapper {
+  position: relative;
+  width: 100%;
+  /* height is set inline via JS (SCROLL_MULTIPLIER × 100vh) */
+}
+
+/* ─── Sticky viewport — stays fixed while user scrolls ─── */
+.hg-sticky {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  perspective: 1000px;
+  perspective-origin: 50% 50%;
+}
+
+/* ─── Dynamic background layers ─── */
+.hg-bg-base {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Warm accent radial glow — uses the portfolio's --accent color */
+.hg-bg-radial {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(
+    ellipse 70% 50% at 50% 45%,
+    rgba(232, 196, 154, 0.08) 0%,
+    transparent 65%
+  );
+  pointer-events: none;
+}
+
+/* Film grain noise overlay */
+.hg-bg-grain {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  mix-blend-mode: overlay;
+}
+
+/* ─── The wide horizontal canvas ─── */
+.hg-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  /* width set inline via JS */
+  z-index: 5;
+  will-change: transform;
+}
+
+/* ═══════════════════════════════════
+   FLOATING IMAGE CARDS
+   ═══════════════════════════════════ */
+.hg-float {
+  position: absolute;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+/* Hero images — constrained max dimensions */
+.hg-float--hero {
+  max-width: clamp(200px, 20vw, 340px);
+}
+
+/* Accent (smaller) images — tighter max */
+.hg-float--accent {
+  max-width: clamp(140px, 14vw, 240px);
+}
+
+/* Card inner */
+.hg-float__inner {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow:
+    0 10px 40px rgba(0, 0, 0, 0.5),
+    0 3px 14px rgba(0, 0, 0, 0.28),
+    0 0 60px rgba(232, 196, 154, 0.025);
+  transition:
+    box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hg-float--hero .hg-float__inner {
+  border-radius: 14px;
+}
+
+.hg-float__inner:hover {
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.6),
+    0 5px 22px rgba(0, 0, 0, 0.32),
+    0 0 100px rgba(232, 196, 154, 0.06);
+}
+
+/* Ambient glow behind each image */
+.hg-float__glow {
+  position: absolute;
+  inset: -35%;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(232, 196, 154, 0.04) 0%,
+    transparent 60%
+  );
+  z-index: -1;
+  pointer-events: none;
+  filter: blur(40px);
+}
+
+/* The image element */
+.hg-float__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  border-radius: inherit;
+  transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hg-float__inner:hover .hg-float__img {
+  transform: scale(1.02);
+}
+
+/* Gradient overlay at bottom of image (subtle cinematic fading) */
+.hg-float__overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(
+    to top,
+    rgba(13, 13, 13, 0.35) 0%,
+    transparent 100%
+  );
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+/* ═══════════════════════════════════
+   DESCRIPTION BLOCK — always visible
+   ═══════════════════════════════════ */
+.hg-float__desc {
+  padding: 0.65rem 0.2rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  mix-blend-mode: difference;
+}
+
+.hg-float__cat {
+  font-size: 8px;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--accent);
+  opacity: 0.7;
+}
+
+.hg-float__label {
+  font-family: var(--font-cormorant-garamond), Georgia, serif;
+  font-style: italic;
+  font-size: clamp(14px, 1.3vw, 20px);
+  color: var(--text);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.hg-float__text {
+  font-size: clamp(10px, 0.8vw, 12px);
+  line-height: 1.55;
+  font-weight: 300;
+  color: rgba(250, 250, 248, 0.35);
+  margin-top: 2px;
+  max-width: 260px;
+}
+
+/* ═══════════════════════════════════
+   VIGNETTE OVERLAYS
+   ═══════════════════════════════════ */
+.hg-vignette {
+  position: absolute;
+  z-index: 12;
+  pointer-events: none;
+}
+
+.hg-vignette--left {
+  top: 0;
+  left: 0;
+  width: 10vw;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    var(--dark) 0%,
+    rgba(13, 13, 13, 0.5) 35%,
+    transparent 100%
+  );
+}
+
+.hg-vignette--right {
+  top: 0;
+  right: 0;
+  width: 10vw;
+  height: 100%;
+  background: linear-gradient(
+    to left,
+    var(--dark) 0%,
+    rgba(13, 13, 13, 0.5) 35%,
+    transparent 100%
+  );
+}
+
+.hg-vignette--top {
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12vh;
+  background: linear-gradient(
+    to bottom,
+    rgba(13, 13, 13, 0.5) 0%,
+    transparent 100%
+  );
+}
+
+.hg-vignette--bottom {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 12vh;
+  background: linear-gradient(
+    to top,
+    rgba(13, 13, 13, 0.6) 0%,
+    transparent 100%
+  );
+}
+
+/* ═══════════════════════════════════
+   INTRO FULLSCREEN SECTION
+   ═══════════════════════════════════ */
+.hg-intro-section {
+  height: 100vh;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 20;
+}
+
+.hg-intro-block {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 580px;
+  width: 90vw;
+}
+
+.hg-intro__label {
+  font-family: var(--font-cormorant-garamond), Georgia, serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(11px, 1.1vw, 13px);
+  letter-spacing: 0.38em;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: clamp(0.5rem, 1.2vh, 1.2rem);
+  opacity: 0.88;
+}
+
+.hg-intro__title {
+  font-family: var(--font-cormorant-garamond), Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(34px, 5.5vw, 76px);
+  line-height: 1.06;
+  color: var(--text);
+  margin-bottom: clamp(0.5rem, 1.2vh, 1rem);
+}
+
+.hg-intro__title em {
+  font-style: italic;
+  color: var(--accent);
+}
+
+.hg-intro__rule {
+  width: 42px;
+  height: 1px;
+  background: var(--accent);
+  margin: 0 auto clamp(0.6rem, 1.4vh, 1.2rem);
+  opacity: 0.6;
+}
+
+.hg-intro__sub {
+  font-size: clamp(12px, 1vw, 15px);
+  line-height: 1.7;
+  font-weight: 300;
+  color: rgba(250, 250, 248, 0.4);
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+/* ═══════════════════════════════════
+   SCROLL PROGRESS BAR
+   ═══════════════════════════════════ */
+.hg-progress {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 16;
+  width: min(200px, 45vw);
+  height: 2px;
+  background: rgba(250, 250, 248, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  mix-blend-mode: difference;
+}
+
+.hg-progress__bar {
+  width: 100%;
+  height: 100%;
+  background: var(--accent);
+  border-radius: inherit;
+  transform-origin: left center;
+  opacity: 0.6;
+}
+
+/* ═══════════════════════════════════
+   AMBIENT PARTICLES
+   ═══════════════════════════════════ */
+.hg-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.hg-particle {
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(232, 196, 154, 0.5) 0%,
+    rgba(232, 196, 154, 0.08) 60%,
+    transparent 100%
+  );
+}
+
+/* ═══════════════════════════════════
+   RESPONSIVE — MOBILE (≤ 768px)
+   ═══════════════════════════════════ */
+@media (max-width: 768px) {
+  .hg-sticky {
+    perspective: 500px;
+  }
+
+  .hg-vignette--left,
+  .hg-vignette--right {
+    width: 5vw;
+  }
+
+  .hg-float--hero {
+    max-width: clamp(180px, 40vw, 280px);
+  }
+
+  .hg-float--accent {
+    max-width: clamp(130px, 30vw, 200px);
+  }
+
+  .hg-float__inner {
+    border-radius: 8px;
+  }
+
+  .hg-float--hero .hg-float__inner {
+    border-radius: 10px;
+  }
+
+  .hg-float__img {
+    border-radius: inherit;
+  }
+
+  .hg-float__desc {
+    padding: 0.5rem 0.1rem 0;
+  }
+
+  .hg-float__text {
+    display: none; /* hide description text on mobile for cleaner look */
+  }
+
+  .hg-progress {
+    bottom: 1.2rem;
+  }
+}
+
+/* ═══════════════════════════════════
+   REDUCED MOTION
+   ═══════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .hg-particle {
+    animation: none !important;
+  }
+
+  .hg-float__inner,
+  .hg-float__img {
+    transition: none !important;
+  }
+}
